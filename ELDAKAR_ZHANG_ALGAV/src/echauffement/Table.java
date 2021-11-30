@@ -18,7 +18,7 @@ public class Table {
 	}
 	
 	public static void main(String[] args) {
-		Table TableVerite = new Table(38, 16);
+		Table TableVerite = new Table(38, 8);
 		System.out.println(TableVerite.getTableVerite());
 	  }
 	

@@ -35,6 +35,7 @@ public class Completion {
 		l.add(false);
 		l.add(false);
 		l.add(true);
+		System.out.println("liste : "+ l);
 		Completion comp1 = new Completion(l,4);
 		System.out.println(comp1.getLC());
 		Completion comp2 = new Completion(l,8);
