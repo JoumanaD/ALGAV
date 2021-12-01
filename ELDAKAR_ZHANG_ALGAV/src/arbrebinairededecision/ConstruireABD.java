@@ -7,29 +7,6 @@ public class ConstruireABD {
     public ConstruireABD (ArrayList<Boolean> T){
         this.T = T;
     }
-    
-    /*
-    public ArrayList<Integer> transformLbooltoLint(ArrayList<Boolean> T){
-        ArrayList<Integer> Tint = new ArrayList<Integer>();
-        for(int i =0; i< T.size(); i++){
-            if (T.get(i) == true) Tint.add(1);
-            else Tint.add(0);
-        }
-        return Tint;
-
-    }
-    */
-
-    public ABR<Integer> cons_arbre0 () {
-        ABR<Integer> X3 = new ABR<Integer>(3);
-        ABR<Integer> X2 = new ABR<Integer>(2);
-        ABR<Integer> X1 = new ABR<Integer>(1);
-        
-        X2.setGauche(X1);
-        X2.setDroit(X1);
-        X3.setGauche(X2);
-        X3.setDroit(X2);
-    }
 
     public ABR cons_arbre(){
         double i = 2;
