@@ -3,8 +3,13 @@ package deuximepartie;
 public class Leaf implements Component{
     private Boolean value;
 
+
     Leaf(Boolean v){
         this.value = v;
+    }
+
+    public boolean getSelf(){
+        return this.value;
     }
 
     @Override
@@ -24,6 +29,11 @@ public class Leaf implements Component{
 
     @Override
     public void setRight(Component right) {
+
+    }
+
+    public void output(){
+        System.out.println(this.value);
 
     }
 }

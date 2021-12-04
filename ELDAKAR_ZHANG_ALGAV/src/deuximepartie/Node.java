@@ -1,5 +1,7 @@
 package deuximepartie;
 
+import arbrebinairededecision.ABR;
+
 import java.util.ArrayList;
 
 public class Node implements Component{
@@ -56,12 +58,14 @@ public class Node implements Component{
     }*/
     public Component cons_arbre(ArrayList<Boolean> list){
         int size = list.size();
-        return cons_arbre_sub(size,list);
+        int tag = (int)(Math.log(size)/Math.log(2));
+        return cons_arbre_sub(tag,list);
     }
 
     private Component cons_arbre_sub(int tag,ArrayList<Boolean> list){
         int size = list.size();
         if(size < 3){
+
             return new Node(tag,new Leaf(list.get(0)),new Leaf(list.get(1)));
 
         }else{
@@ -71,13 +75,41 @@ public class Node implements Component{
         }
 
     }
+/*
+    public void output(){
+        if(this.leftChild == null && this.rightChild == null){
+            System.out.println(this.);
+        }else{
+            System.out.println(this.etiquette);
+            this.leftChild.output();
+            this.rightChild.output();
+        }
+    }
+    */
 
+    /*
     public String toString() {
         if (this.leftChild == null && this.rightChild == null) {
             return String.format("[ %d ]", this.etiquette);
         }
         return String.format("[ %d : %s, %s]", this.etiquette, this.leftChild, this.rightChild);
+    }*/
+/*
+    public int height(Node tree){
+        if(tree == null) return 0;
+        int left = height(tree.getLeft());
+        int right = height(tree.getDroit());
+        return Math.max(left, right) + 1;
     }
-
+    public String toString(){
+        int h = height(this);
+        int i;
+        String result = "";
+        for (i=1; i<=h; i++) {
+            result += printGivenLevel(this, i);
+        }
+        return result;
+    }
+*/
 
 }

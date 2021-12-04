@@ -14,7 +14,8 @@ public class Main {
         tableV.addAll(list);
         Node abdTest = new Node();
         abdTest.cons_arbre(tableV);
-        System.out.println(abdTest.toString());
+        System.out.println(tableV);
+        abdTest.output();
         //tableI = abdTest.transformLbooltoLint(tableV);
 
         //abdTest.cons_arbre();
