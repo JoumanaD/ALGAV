@@ -1,13 +1,16 @@
 package arbrebinairededecision;
 
 public class Node {
-    int value;
-    Node left;
-    Node right;
+    int valeur;
+    boolean estFeuille;
 
-    Node(int value) {
-        this.value = value;
-        right = null;
-        left = null;
+    Node gauche, droit;
+ 
+    public Node(int valeur, boolean estFeuille)
+    {
+        this.valeur = valeur;
+        this.estFeuille = estFeuille;
+        gauche = droit = null;
     }
+    
 }

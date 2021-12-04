@@ -16,6 +16,10 @@ public class Table {
 	public List<Boolean> getTableVerite(){
 		return l;
 	}
+
+	public int longueur () {
+		return l.size();
+	}	
 	
 	public static void main(String[] args) {
 		Table TableVerite = new Table(38, 8);
