@@ -32,8 +32,7 @@ public class Leaf implements Component{
 
     }
 
-    public void output(){
-        System.out.println(this.value);
-
+    public boolean output(){
+        return this.value;
     }
 }

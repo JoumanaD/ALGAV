@@ -1,7 +1,5 @@
 package deuximepartie;
 
-import arbrebinairededecision.ABR;
-
 import java.util.ArrayList;
 
 public class Node implements Component{
@@ -56,13 +54,13 @@ public class Node implements Component{
         }
             return tree;
     }*/
-    public Component cons_arbre(ArrayList<Boolean> list){
+    public Node cons_arbre(ArrayList<Boolean> list){
         int size = list.size();
         int tag = (int)(Math.log(size)/Math.log(2));
         return cons_arbre_sub(tag,list);
     }
 
-    private Component cons_arbre_sub(int tag,ArrayList<Boolean> list){
+    private Node cons_arbre_sub(int tag,ArrayList<Boolean> list){
         int size = list.size();
         if(size < 3){
 
@@ -75,17 +73,23 @@ public class Node implements Component{
         }
 
     }
-/*
-    public void output(){
-        if(this.leftChild == null && this.rightChild == null){
-            System.out.println(this.);
+
+    public void output(Node n){
+        if(n.leftChild instanceof Node && n.rightChild instanceof Node){
+            System.out.println(n.etiquette);
+            output((Node)n.leftChild);
+            output((Node)n.rightChild);
         }else{
-            System.out.println(this.etiquette);
-            this.leftChild.output();
-            this.rightChild.output();
+            System.out.println(n.etiquette);
+            System.out.println(((Leaf) n.leftChild).output());
+            System.out.println(((Leaf) n.rightChild).output());
+
         }
+
+
+
     }
-    */
+
 
     /*
     public String toString() {

@@ -1,7 +1,5 @@
 package deuximepartie;
 
-import arbrebinairededecision.ConstruireABD;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +11,9 @@ public class Main {
         List list = Arrays.asList(false,true,true,false,false,true,false,false);
         tableV.addAll(list);
         Node abdTest = new Node();
-        abdTest.cons_arbre(tableV);
+        Node test = abdTest.cons_arbre(tableV);
         System.out.println(tableV);
-        abdTest.output();
+        abdTest.output(test);
         //tableI = abdTest.transformLbooltoLint(tableV);
 
         //abdTest.cons_arbre();
