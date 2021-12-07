@@ -7,6 +7,7 @@ public interface Component {
     //public abstract void operation();
 
 
+
     public Component getLeft();
 
     public void setLeft(Component left);
@@ -14,6 +15,11 @@ public interface Component {
     public Component getRight();
 
     public void setRight(Component right);
+
+    public String getLuka();
+
+    public void setLuka(String str);
+
 
 
 

@@ -14,6 +14,7 @@ public class Main {
         Node test = abdTest.cons_arbre(tableV);
         System.out.println(tableV);
         abdTest.output(test);
+        abdTest.preOrderTraverse1(test);
         //tableI = abdTest.transformLbooltoLint(tableV);
 
         //abdTest.cons_arbre();

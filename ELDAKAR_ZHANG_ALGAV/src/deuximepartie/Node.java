@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Node implements Component{
     private int etiquette;
+    private String luka;
     private Component leftChild;
     private Component rightChild;
     private ArrayList<Component> nodes = new ArrayList<Component>();
@@ -38,22 +39,33 @@ public class Node implements Component{
     public void setRight(Component right) {
         this.rightChild = right;
     }
-/*
-    public Component cons_arbre(ArrayList<Boolean> list){
-        Component tree;
 
-        int size = list.size();
-        if(size < 3){
-            tree = new Node("x",new Leaf(list.get(0)),new Leaf(list.get(1)));
-            return tree;
+    @Override
+    public String getLuka() {
+        return this.luka;
+    }
 
-        }else{
-            ArrayList<Boolean> subList1 = new ArrayList<>(list.subList(0,size/2));
-            ArrayList<Boolean> subList2 = new ArrayList<>(list.subList(size/2,size));
-            tree = new Node("x",cons_arbre(subList1),cons_arbre(subList2));
-        }
-            return tree;
-    }*/
+    @Override
+    public void setLuka(String str) {
+        this.luka = str;
+    }
+
+    /*
+        public Component cons_arbre(ArrayList<Boolean> list){
+            Component tree;
+
+            int size = list.size();
+            if(size < 3){
+                tree = new Node("x",new Leaf(list.get(0)),new Leaf(list.get(1)));
+                return tree;
+
+            }else{
+                ArrayList<Boolean> subList1 = new ArrayList<>(list.subList(0,size/2));
+                ArrayList<Boolean> subList2 = new ArrayList<>(list.subList(size/2,size));
+                tree = new Node("x",cons_arbre(subList1),cons_arbre(subList2));
+            }
+                return tree;
+        }*/
     public Node cons_arbre(ArrayList<Boolean> list){
         int size = list.size();
         int tag = (int)(Math.log(size)/Math.log(2));
@@ -85,9 +97,51 @@ public class Node implements Component{
             System.out.println(((Leaf) n.rightChild).output());
 
         }
+    }
 
+    public void preOrderTraverse1(Node n) {
+        if (n != null) {
+            if(n.leftChild instanceof Node && n.rightChild instanceof Node){
+                System.out.print(n.etiquette);
+                System.out.print("(");
+                preOrderTraverse1((Node)n.leftChild);
+                preOrderTraverse1((Node)n.rightChild);
+                System.out.print(")");
+            }else{
+                System.out.print(n.etiquette);
+                System.out.print("(");
+                System.out.print(((Leaf) n.leftChild).output());
+                System.out.print(")");
+                System.out.print("(");
+                System.out.print(((Leaf) n.rightChild).output());
+                System.out.print(")");
 
+            }
+        }
+    }
 
+    public Node luka(Node node){
+        if(node.leftChild instanceof Node && node.rightChild instanceof Node){
+            node.setLuka(luka(((Node) node.leftChild)).getLuka()+luka(((Node) node.rightChild)).getLuka());
+            return node;
+        }else{
+            node.setLuka(Boolean.toString(((Leaf) node.leftChild).getSelf()));
+            return node;
+        }
+    }
+
+    public void affiche(Node n){
+        System.out.println(n.getLuka());
+        /*if(n.leftChild instanceof Node && n.rightChild instanceof Node){
+            System.out.println(n.getLuka());
+            output((Node)n.leftChild);
+            output((Node)n.rightChild);
+        }else{
+            System.out.println(n.etiquette);
+            System.out.println(((Leaf) n.leftChild).output());
+            System.out.println(((Leaf) n.rightChild).output());
+
+        }*/
     }
 
 

@@ -2,6 +2,8 @@ package deuximepartie;
 
 public class Leaf implements Component{
     private Boolean value;
+    private String luka;
+
 
 
     Leaf(Boolean v){
@@ -30,6 +32,17 @@ public class Leaf implements Component{
     @Override
     public void setRight(Component right) {
 
+    }
+
+    @Override
+    public String getLuka() {
+        return this.luka;
+    }
+
+
+    @Override
+    public void setLuka(String str) {
+        this.luka = str;
     }
 
     public boolean output(){
