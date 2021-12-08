@@ -42,6 +42,7 @@ public class Node implements Component{
 
     @Override
     public String getLuka() {
+        this.luka = this.getLeft().getLuka()+this.getRight().getLuka();
         return this.luka;
     }
 
@@ -120,14 +121,27 @@ public class Node implements Component{
         }
     }
 
-    public Node luka(Node node){
+    public Node luka(Node n){
+        if(n.leftChild instanceof Node && n.rightChild instanceof Node){
+            n.getLuka();
+            luka((Node)n.getLeft());
+            luka((Node)n.getRight());
+            return n;
+        }else{
+            n.getLuka();
+            return n;
+        }
+
+
+        /*
         if(node.leftChild instanceof Node && node.rightChild instanceof Node){
             node.setLuka(luka(((Node) node.leftChild)).getLuka()+luka(((Node) node.rightChild)).getLuka());
             return node;
         }else{
-            node.setLuka(Boolean.toString(((Leaf) node.leftChild).getSelf()));
+            node.setLuka(((Leaf) node.leftChild).getSelf()+Boolean.toString(((Leaf) node.rightChild).getSelf()));
             return node;
         }
+         */
     }
 
     public void affiche(Node n){

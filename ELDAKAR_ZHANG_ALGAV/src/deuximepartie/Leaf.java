@@ -36,6 +36,7 @@ public class Leaf implements Component{
 
     @Override
     public String getLuka() {
+        this.luka = Boolean.toString(this.getSelf());
         return this.luka;
     }
 
