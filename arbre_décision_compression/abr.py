@@ -85,6 +85,8 @@ class ArbreBinaire:
 #######fin de la classe########
 
 
+
+
 ######début de la construction de l'arbre binaire###########
 def cons_abr(liste):
    taille = len(liste)
@@ -112,6 +114,68 @@ def luka(Noeud):
       #print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")      
    return Noeud
 ###### fin fonction Lukasiewicz ###########
+
+
+##### Question 2.9 #######
+listN=[]
+listLuka=[]
+def listNoeud(Noeud):
+
+   if Noeud.get_gauche() != None :
+      listInternV = [Noeud.valeur,Noeud.gauche.get_valeur(),Noeud.droit.get_valeur()]
+      listN.append(listInternV)
+      listNoeud(Noeud.get_gauche())
+      listNoeud(Noeud.get_droit())
+
+def listNoeudLuka(Noeud):
+   if Noeud.get_gauche() != None:
+      listInternL = [Noeud.valeur, Noeud.gauche.get_valeur(), Noeud.droit.get_valeur()]
+      listLuka.append(listInternL)
+      listNoeudLuka(Noeud.get_gauche())
+      listNoeudLuka(Noeud.get_droit())
+
+def dot(Noeud):
+   listNoeud(abd)
+   arbre_luka = luka(abd)
+   listNoeudLuka(arbre_luka)
+   index = 0
+   f = open('/Users/yvo/Desktop/graph.txt', "a")
+   f.write("digraph test {\n")
+
+
+   for lukaV in listLuka:
+      if not isinstance(lukaV[1],bool):
+         f.write(lukaV[0] + "   [ label=\" " + listN[index][0] + " \"];\n")
+         f.write(lukaV[1] + "   [ label=\" " + listN[index][1] + " \"];\n")
+         f.write(lukaV[2] + "   [ label=\" " + listN[index][2] + " \"];\n")
+         index = index +1
+      else:
+         f.write(lukaV[0] + "   [ label=\" " + listN[index][0] + " \"];\n")
+         f.write(str(lukaV[1]) + "   [ label=\" " + str(listN[index][1]) + " \"];\n")
+         f.write(str(lukaV[2]) + "   [ label=\" " + str(listN[index][2]) + " \"];\n")
+         index = index + 1
+
+   for tree in listLuka:
+      if not isinstance(tree[1],bool):
+         f.write(tree[0]+" -> "+tree[1]+"   [ style=dashed ];\n")
+         f.write(tree[0]+" -> "+tree[2]+"   [ style=solid    ];\n")
+      else:
+         f.write(tree[0] + " -> " + str(tree[1]) + "   [ style=dashed  ];\n")
+         f.write(tree[0] + " -> " + str(tree[2]) + "   [ style=solid  ];\n")
+   f.write("}")
+
+
+
+
+   f.close()
+
+
+
+
+
+
+
+
 
 def print2DUtil(root, space) :
  
@@ -142,11 +206,20 @@ def print2D(root) :
    # Pass initial space count as 0
    print2DUtil(root, 0)
 
+
+# Question 2.9
+
+
+
+
 ######partie pour tester###########
 abd = cons_abr([False, True, True, False, False, True, False, False])
 abd.display()
-arbre_luka = luka(abd)
-arbre_luka.display()
-print2D(arbre_luka)
+#arbre_luka = luka(abd)
+
+dot(abd)
+
+#arbre_luka.display()
+#print2D(arbre_luka)
 ######fin des tests###########
 
