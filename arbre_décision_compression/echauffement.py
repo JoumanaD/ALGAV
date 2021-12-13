@@ -8,10 +8,10 @@ def decomposition(num):
         else:
             listBi.append(False)
     listBi.reverse()
-    #print(listBi)
+    print(listBi)
     return listBi
 
-#decomposition(38)
+decomposition(38)
 
 def completion(liste,size):
     if size < len(liste):
@@ -32,4 +32,4 @@ def table(x,n):
     print(liste2)
     return liste2
     
-table(38,8)
+#table(38,8)

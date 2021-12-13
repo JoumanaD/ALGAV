@@ -1,5 +1,9 @@
 import math
 import random
+import numpy as np
+import matplotlib.pyplot as plt
+
+from arbre_décision_compression import echauffement
 
 COUNT = [50]
 
@@ -142,25 +146,15 @@ def listNoeud(Noeud):
 
 def dot(Noeud):
     listNoeud(abd)
-    f = open('/Users/yvo/Desktop/final.dot', "a")
+    f = open('/Users/yvo/Desktop/final.txt', "a")
     f.write("digraph test {\n")
 
     for node in listN:
-        if not isinstance(node[1].valeur, bool):
-            f.write(node[0].get_id() + "   [ label=\" " + node[0].valeur + " \"];\n")
-            f.write(node[1].get_id() + "   [ label=\" " + node[1].valeur + " \"];\n")
-            f.write(node[2].get_id() + "   [ label=\" " + node[2].valeur + " \"];\n")
-        else:
-            f.write(node[0].get_id() + "   [ label=\" " + node[0].valeur + " \"];\n")
-            f.write(node[1].get_id() + "   [ label=\" " + str(node[1].valeur) + " \"];\n")
-            f.write(node[2].get_id() + "   [ label=\" " + str(node[2].valeur) + " \"];\n")
-    for tree in listN:
-        if not isinstance(tree[1].valeur, bool):
-            f.write(tree[0].get_id() + " -> " + tree[1].get_id() + "   [ style=dashed ];\n")
-            f.write(tree[0].get_id() + " -> " + tree[2].get_id() + "   [ style=solid    ];\n")
-        else:
-            f.write(tree[0].get_id() + " -> " + str(tree[1].get_id()) + "   [ style=dashed  ];\n")
-            f.write(tree[0].get_id() + " -> " + str(tree[2].get_id()) + "   [ style=solid  ];\n")
+        f.write(node[0].get_id() + "   [ label=\" " + node[0].valeur + " \"];\n")
+        f.write(node[1].get_id() + "   [ label=\" " + str(node[1].valeur) + " \"];\n")
+        f.write(node[2].get_id() + "   [ label=\" " + str(node[2].valeur) + " \"];\n")
+        f.write(node[0].get_id() + " -> " + str(node[1].get_id()) + "   [ style=dashed  ];\n")
+        f.write(node[0].get_id() + " -> " + str(node[2].get_id()) + "   [ style=solid  ];\n")
     f.write("}")
 
     f.close()
@@ -196,10 +190,39 @@ def print2D(root):
 
 
 # Question 4.15
+'''
 def size(tree):
     if not tree:
         return 0
     return 1 + size(tree.get_gauche()) + size(tree.get_droit())
+
+def experimentation(nbVariable):
+    resultDic = {}
+    tailleTable = pow(2,nbVariable)
+    maxValeur = pow(2,tailleTable)-1
+    for value in range(0,maxValeur):
+        tree = cons_abr(echauffement.table(value, tailleTable))
+        tree_robdd = robdd(tree) #transformer l'arbre en ROBDD
+        nbNoeud = size(tree_robdd)
+        if resultDic.has_key(nbNoeud):
+            resultDic[nbNoeud] = resultDic[nbNoeud]+1
+        else:
+            resultDic[nbNoeud] = 1
+    return resultDic
+
+
+
+##### Exprimentale #####
+'''
+#dicRes = experimentation(1)
+
+#sorted (dicRes)
+
+plt.plot([1,2,3,4], [1,4,9,16],'b-o')
+# 指定 x 轴显示区域为 0-6，y 轴为 0-20
+plt.axis([0,3.2,0,2.4])
+plt.show()
+
 
 
 
