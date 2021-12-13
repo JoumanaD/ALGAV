@@ -169,7 +169,7 @@ def listNoeud(Noeud):
 
 def dot(Noeud):
     listNoeud(Noeud)
-    f = open('/home/joumana/STL/ALGAV/arbre_décision_compression/dot_arbre.dot', "a")
+    f = open('/home/joumana/STL/ALGAV/ROBDD/dot_bdd.dot', "a")
     f.write("digraph test {\n")
 
     for node in listN:
@@ -244,7 +244,7 @@ def printluka2D(root):
 
 
 ######partie pour tester###########
-abd = cons_abr([False, True, True, False, False, True, False, False])
+abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
 
 # arbre_luka = luka(abd)
 #print2D(abd)
