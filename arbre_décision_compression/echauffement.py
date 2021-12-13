@@ -32,4 +32,4 @@ def table(x,n):
     print(liste2)
     return liste2
     
-table(5895,16)
+table(38,8)
