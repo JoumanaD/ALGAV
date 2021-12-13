@@ -111,7 +111,23 @@ def luka(Noeud):
       Noeud.valeur = str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")"
       #print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")      
    return Noeud
-###### fin fonction Lukasiewicz ###########
+###### fin fonction Lukasiewicz #######
+table={}
+i=0
+def compression(Noeud):
+   if Noeud==None:
+      return
+  
+   if Noeud.gauche!=None:
+      compression(Noeud.gauche) 
+  
+   if Noeud.droit!=None:
+      compression(Noeud.droit)
+
+   if isinstance(Noeud.valeur, bool):
+      table[Noeud.valeur]=i
+   return Noeud, i+1
+      
 
 def print2DUtil(root, space) :
  
@@ -145,8 +161,11 @@ def print2D(root) :
 ######partie pour tester###########
 abd = cons_abr([False, True, True, False, False, True, False, False])
 abd.display()
+
 arbre_luka = luka(abd)
 arbre_luka.display()
+abd.display()
 print2D(arbre_luka)
 ######fin des tests###########
-
+compression(abd)
+print(table)
