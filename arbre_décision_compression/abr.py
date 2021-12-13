@@ -1,11 +1,14 @@
 import math 
-COUNT = [50]
+import random
 
+COUNT = [50]
+ID = [1]
 class ArbreBinaire:
    def __init__(self, valeur, gauche=None, droit=None):
       self.valeur= valeur
       self.gauche = gauche
       self.droit = droit
+      self.id = str(round(random.uniform(0,1),20))
 
    def insert_gauche(self, valeur):
       if self.gauche == None:
@@ -31,56 +34,9 @@ class ArbreBinaire:
 
    def get_droit(self):
       return self.droit
-   
-   def display(self):
-        lines, *_ = self._display_aux()
-        for line in lines:
-            print(line)
 
-   def _display_aux(self):
-      """Returns list of strings, width, height, and horizontal coordinate of the root."""
-      # No child.
-      if self.droit is None and self.gauche is None:
-         line = '%s' % self.valeur
-         width = len(line)
-         height = 1
-         middle = width // 2
-         return [line], width, height, middle
-
-      # Only left child.
-      if self.droit is None:
-         lines, n, p, x = self.gauche._display_aux()
-         s = '%s' % self.valeur
-         u = len(s)
-         first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s
-         second_line = x * ' ' + '/' + (n - x - 1 + u) * ' '
-         shifted_lines = [line + u * ' ' for line in lines]
-         return [first_line, second_line] + shifted_lines, n + u, p + 2, n + u // 2
-
-      # Only right child.
-      if self.gauche is None:
-         lines, n, p, x = self.droit._display_aux()
-         s = '%s' % self.valeur
-         u = len(s)
-         first_line = s + x * '_' + (n - x) * ' '
-         second_line = (u + x) * ' ' + '\\' + (n - x - 1) * ' '
-         shifted_lines = [u * ' ' + line for line in lines]
-         return [first_line, second_line] + shifted_lines, n + u, p + 2, u // 2
-
-      # Two children.
-      gauche, n, p, x = self.gauche._display_aux()
-      droit, m, q, y = self.droit._display_aux()
-      s = '%s' % self.valeur
-      u = len(s)
-      first_line = (x + 1) * ' ' + (n - x - 1) * '_' + s + y * '_' + (m - y) * ' '
-      second_line = x * ' ' + '/' + (n - x - 1 + u + y) * ' ' + '\\' + (m - y - 1) * ' '
-      if p < q:
-         gauche += [n * ' '] * (q - p)
-      elif q < p:
-         droit += [m * ' '] * (p - q)
-      zipped_lines = zip(gauche, droit)
-      lines = [first_line, second_line] + [a + u * ' ' + b for a, b in zipped_lines]
-      return lines, n + m + u, max(p, q) + 2, n + u // 2
+   def get_id(self):
+      return self.id
 
 #######fin de la classe########
 
@@ -112,6 +68,54 @@ def luka(Noeud):
       #print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")      
    return Noeud
 ###### fin fonction Lukasiewicz ###########
+v=None
+tab=[]
+tabn=[]
+dict = {False: 0, True:1}
+def rech_val(tab, val):
+   for i in range(len(tab)):
+      if not isinstance(val, bool):
+         if tab[i][0] == val :
+            return tab[i][3]
+      else : 
+         if tab[i][0] == val:
+            return tab[i][1]
+
+def exist_struc(tab, struc):
+   for i in range(len(tab)):
+      if tab[i][0] == struc :
+         return True
+   return False
+
+def rech_noeud(tab, val):
+   for i in range(len(tab)):
+      if tab[i][1] == val :
+         return tab[i][0]
+
+def compression(Noeud):
+   if Noeud==None:
+      return
+
+   if Noeud.gauche!=None :
+      compression(Noeud.gauche) 
+   if  Noeud.droit!=None:
+      compression(Noeud.droit)
+
+   if not isinstance(Noeud.valeur, bool) and not exist_struc(tab, Noeud.valeur): 
+      ng = rech_val(tab,Noeud.gauche.valeur)
+      nd = rech_val(tab,Noeud.droit.valeur)
+      tab.append([Noeud.valeur, ng, nd, len(tab)])
+      tabn.append([Noeud, len(tabn)])
+      Noeud.gauche = rech_noeud(tabn, ng)
+      Noeud.droit = rech_noeud(tabn, nd)
+      
+   else :
+      if not exist_struc(tab, Noeud.valeur):
+         tab.append([Noeud.valeur, len(tab)])
+         tabn.append([Noeud, len(tabn)])
+ 
+   return Noeud 
+ 
 
 def print2DUtil(root, space) :
  
@@ -130,7 +134,7 @@ def print2DUtil(root, space) :
       print()
       for i in range(COUNT[0], space):
          print(end = " ")
-      print(root.valeur)
+      print(root.get_id() +": " +str(root.valeur))
  
     # Process left child
       print2DUtil(root.gauche, space)
@@ -144,9 +148,15 @@ def print2D(root) :
 
 ######partie pour tester###########
 abd = cons_abr([False, True, True, False, False, True, False, False])
-abd.display()
+#abd.display()
+#print2D(abd)
+#print("\n\n\n\n\n")
 arbre_luka = luka(abd)
-arbre_luka.display()
-print2D(arbre_luka)
+#arbre_luka.display()
+#print2D(arbre_luka)
+
+compression(abd)
 ######fin des tests###########
 
+print(tab)
+print2D(abd)
