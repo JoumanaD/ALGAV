@@ -160,3 +160,6 @@ compression(abd)
 
 print(tab)
 print2D(abd)
+
+abd = cons_abr([True, True, True, False, False, False, False, False, True, True, True, False, True, False, False, False])
+print2D(abd)
