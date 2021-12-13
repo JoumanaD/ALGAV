@@ -2,7 +2,6 @@ import math
 import random
 import numpy as np
 import matplotlib.pyplot as plt
-
 from arbre_décision_compression import echauffement
 
 COUNT = [50]
@@ -145,7 +144,7 @@ def listNoeud(Noeud):
 
 
 def dot(Noeud):
-    listNoeud(abd)
+    listNoeud(Noeud)
     f = open('/Users/yvo/Desktop/final.txt', "a")
     f.write("digraph test {\n")
 
@@ -190,7 +189,7 @@ def print2D(root):
 
 
 # Question 4.15
-'''
+
 def size(tree):
     if not tree:
         return 0
@@ -210,18 +209,32 @@ def experimentation(nbVariable):
             resultDic[nbNoeud] = 1
     return resultDic
 
+def graphy_test_1(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
+
+    plt.plot([1, 2, 3, 4], [1, 4, 9, 16], 'b-o')
+    # 指定 x 轴显示区域为 0-6，y 轴为 0-20
+    plt.axis([0, 3.2, 0, 2.4])
+    plt.show()
 
 
-##### Exprimentale #####
-'''
-#dicRes = experimentation(1)
+def graphy_test_2(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
 
-#sorted (dicRes)
+    plt.plot(all_keys, all_values, 'b-o')
 
-plt.plot([1,2,3,4], [1,4,9,16],'b-o')
-# 指定 x 轴显示区域为 0-6，y 轴为 0-20
-plt.axis([0,3.2,0,2.4])
-plt.show()
+    plt.axis([0, 6, 0, 10])
+    plt.show()
+
+
+
+
 
 
 
@@ -230,8 +243,6 @@ plt.show()
 abd = cons_abr([False, True, True, False, False, True, False, False])
 abd.display()
 # arbre_luka = luka(abd)
-listNoeud(abd)
-print(listN)
 dot(abd)
 
 # arbre_luka.display()
