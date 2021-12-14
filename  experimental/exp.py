@@ -172,7 +172,6 @@ def compression_bdd(Noeud):
             Noeud.gauche = Noeud.gauche.gauche
         elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit :
             Noeud.droit = Noeud.droit.droit
-    
         
         ng = rech_val(tab,Noeud.gauche.lukaval)
         nd = rech_val(tab,Noeud.droit.lukaval)
@@ -180,22 +179,13 @@ def compression_bdd(Noeud):
         tabn.append([Noeud, len(tabn)])
         Noeud.gauche = rech_noeud(tabn, ng)
         Noeud.droit = rech_noeud(tabn, nd)
+        if Noeud.gauche == Noeud.droit:
+            return ArbreBinaire(Noeud.gauche.valeur, Noeud.gauche.gauche, Noeud.droit.gauche, Noeud.gauche.lukaval)
         
     else :
         if not exist_struc(tab, Noeud.valeur):
             tab.append([Noeud.lukaval, len(tab)])
             tabn.append([Noeud, len(tabn)])
-
-    print2D(Noeud.gauche)
-    print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-    print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-    print2D(Noeud.droit)
-    print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-    print("------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-
-    if Noeud.gauche == Noeud.droit != None:
-        if Noeud.gauche.lukaval == Noeud.droit.lukaval:
-            return Noeud.gauche
     
     return Noeud
 
@@ -228,6 +218,9 @@ def dot(Noeud):
     f.write("}")
 
     f.close()
+
+
+##### Experimental
 
 
 
@@ -380,3 +373,50 @@ def experimentation(nbVariable):
 # 指定 x 轴显示区域为 0-6，y 轴为 0-20
 #plt.axis([0,3.2,0,2.4])
 #plt.show()
+
+def size(tree):
+    if not tree:
+        return 0
+    return 1 + size(tree.get_gauche()) + size(tree.get_droit())
+
+def experimentation(nbVariable):
+    resultDic = {}
+    tailleTable = pow(2,nbVariable)
+    maxValeur = pow(2,tailleTable)-1
+    for value in range(0,maxValeur+1):
+        tree = cons_abr(echauffement.table(value, tailleTable))
+        tree_robdd = compression_bdd(tree) #transformer l'arbre en ROBDD
+        nbNoeud = dot(tree_robdd)
+        if nbNoeud in resultDic:#resultDic.has_key(nbNoeud):
+            resultDic[nbNoeud] = resultDic[nbNoeud]+1
+        else:
+            resultDic[nbNoeud] = 1
+    return resultDic
+
+def graphy_test_1(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    print(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
+
+    plt.plot(all_keys, all_values, 'b-o')
+    # 指定 x 轴显示区域为 0-6，y 轴为 0-20
+    plt.axis([0, 3.2, 0, 2.4])
+    plt.show()
+
+def graphy_test_2(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
+
+    plt.plot(all_keys, all_values, 'b-o')
+
+    plt.axis([0, 6, 0, 10])
+    plt.show()
+
+
+
+graphy_test_1(1)
+graphy_test_2(2)
