@@ -146,20 +146,20 @@ def compression(Noeud):
    if  Noeud.droit!=None:
       compression(Noeud.droit)
 
-   if not isinstance(Noeud.valeur, bool) and not exist_struc(tab, Noeud.valeur): 
-      ng = rech_val(tab,Noeud.gauche.valeur)
-      nd = rech_val(tab,Noeud.droit.valeur)
-      tab.append([Noeud.valeur, ng, nd, len(tab)])
+   if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval): 
+      ng = rech_val(tab,Noeud.gauche.lukaval)
+      nd = rech_val(tab,Noeud.droit.lukaval)
+      tab.append([Noeud.lukaval, ng, nd, len(tab)])
       tabn.append([Noeud, len(tabn)])
       Noeud.gauche = rech_noeud(tabn, ng)
       Noeud.droit = rech_noeud(tabn, nd)
       
    else :
       if not exist_struc(tab, Noeud.valeur):
-         tab.append([Noeud.valeur, len(tab)])
+         tab.append([Noeud.lukaval, len(tab)])
          tabn.append([Noeud, len(tabn)])
  
-   return Noeud 
+   return Noeud
  
 
 def compression_bdd(Noeud):
