@@ -183,8 +183,6 @@ def compression_bdd(Noeud):
         tabn.append([Noeud, len(tabn)])
         Noeud.gauche = rech_noeud(tabn, ng)
         Noeud.droit = rech_noeud(tabn, nd)
-        if Noeud.gauche == Noeud.droit:
-            return ArbreBinaire(Noeud.gauche.valeur, Noeud.gauche.gauche, Noeud.droit.gauche, Noeud.gauche.lukaval)
         
     else :
         if not exist_struc(tab, Noeud.valeur):
