@@ -97,19 +97,22 @@ def cons_abr(liste):
 ###### le mot de Lukasiewicz ###########
 #on utilise un parcours postfixe pour créer l'arbre luka
 def luka(Noeud):
-   if Noeud==None:
-      return
-  
-   if Noeud.gauche!=None:
-      luka(Noeud.gauche) 
-  
-   if Noeud.droit!=None:
-      luka(Noeud.droit)
-   
-   if not isinstance(Noeud.valeur, bool):
-      Noeud.valeur = str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")"
-      #print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")      
-   return Noeud
+    if Noeud == None:
+        return
+
+    if Noeud.gauche != None:
+        luka(Noeud.gauche)
+
+    if Noeud.droit != None:
+        luka(Noeud.droit)
+
+    if not isinstance(Noeud.valeur, bool):
+        Noeud.lukaval = str(Noeud.valeur) + "(" + str(Noeud.gauche.get_luka()) + ")" + "(" + str(
+            Noeud.droit.get_luka()) + ")"
+        # print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")
+    else :
+        Noeud.lukaval = Noeud.valeur
+    return Noeud
 ###### fin fonction Lukasiewicz ###########
 
 tab=[]
