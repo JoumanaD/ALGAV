@@ -43,6 +43,9 @@ class ArbreBinaire:
 
     def get_luka(self):
         return self.lukaval
+
+    def delete_noeud(self):
+        self = self.gauche
 #######fin de la classe########
 
 def print2DUtil(root, space) :
@@ -157,47 +160,65 @@ def compression(Noeud):
  
    return Noeud 
 ####### fin fonction compression #########
-
-def compression_bdd(Noeud):
+def hauteur(node):
+    """Fonction récursive renvoyant la hauteur d'un arbre
+    
+    Arguments
+    ---------
+    node: Node
+        Le noeud racine de l'arbre
+    
+    Returns
+    -------
+    int
+        La hauteur de l'arbre
+    """
+    # Cas de base 
+    if not(node):
+        return -1
+    else:
+        # print(node)
+        return 1 + max(hauteur(node.gauche), hauteur(node.droit))
+        
+    
+def compression_bdd(Noeud,arbre):
     if Noeud==None:
       return
 
     if Noeud.gauche!=None :
-        compression_bdd(Noeud.gauche) 
+        compression_bdd(Noeud.gauche, arbre) 
     if  Noeud.droit!=None:
-        compression_bdd(Noeud.droit)
+        compression_bdd(Noeud.droit, arbre)
 
-    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval): 
-        if Noeud.gauche.gauche != None and Noeud.gauche.gauche == Noeud.gauche.droit :
-            Noeud.gauche = Noeud.gauche.gauche
-        elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit :
-            Noeud.droit = Noeud.droit.droit
-        
+    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval) : 
+        arbre = Noeud
+        if Noeud.gauche != None and Noeud.droit != None and arbre.droit != None:
+            if Noeud.gauche.gauche != None and Noeud.gauche.gauche == Noeud.gauche.droit :
+                arbre.gauche = Noeud.gauche.gauche
+            elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit :
+                arbre.droit = Noeud.droit.droit
+
         ng = rech_val(tab,Noeud.gauche.lukaval)
         nd = rech_val(tab,Noeud.droit.lukaval)
         tab.append([Noeud.lukaval, ng, nd, len(tab)])
         tabn.append([Noeud, len(tabn)])
         Noeud.gauche = rech_noeud(tabn, ng)
         Noeud.droit = rech_noeud(tabn, nd)
-        if Noeud.gauche == Noeud.droit:
-            return ArbreBinaire(Noeud.gauche.valeur, Noeud.gauche.gauche, Noeud.droit.gauche, Noeud.gauche.lukaval)
+
         
     else :
         if not exist_struc(tab, Noeud.valeur):
             tab.append([Noeud.lukaval, len(tab)])
             tabn.append([Noeud, len(tabn)])
-    
+            
     return Noeud
 
-a = cons_abr([False, False])
-luka(a)
-compression_bdd(a)
 
 ##### Question 2.9 #######
 listN = []
 
 def listNoeud(Noeud):
-    if Noeud.get_gauche() != None and [Noeud, Noeud.gauche, Noeud.droit] not in listN:
+    if Noeud.get_gauche() != None and Noeud.get_droit() != None and [Noeud, Noeud.gauche, Noeud.droit] not in listN:
             listN.append([Noeud, Noeud.gauche, Noeud.droit])
             listNoeud(Noeud.get_gauche())
             listNoeud(Noeud.get_droit())
@@ -206,7 +227,7 @@ def listNoeud(Noeud):
 
 def dot(Noeud):
     listNoeud(Noeud)
-    f = open('/home/joumana/STL/ALGAV/dot_bdd.dot', "a")
+    f = open('D:\M1-STL\ALGAV\dot_bdd.dot', "a")
     f.write("digraph test {\n")
 
     for node in listN:
@@ -257,166 +278,29 @@ def printluka2D(root):
 
 
 ######partie pour tester###########
-abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
+#abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
 
 # arbre_luka = luka(abd)
 #print2D(abd)
-luka(abd)
+#luka(abd)
+
 '''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-printluka2D(abd)
-'''
-#compression_bdd(abd)
-'''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-'''
+a = cons_abr([False, False])
+luka(a)
+a = compression_bdd(a, None)
+print2D(a)
 
-######fin des tests###########
-
-
-
-
-
-
-# Question 4.15
-
-def left_height(node):
-    ht = 0
-    while(node):
-        ht += 1
-        node = node.gauche
-         
-     # Return the left height obtained
-    return ht
- 
-# Function to get the right height
-# of the binary tree
-def right_height(node):
-    ht = 0
-    while(node):
-        ht += 1
-        node = node.droit
-         
-    # Return the right height obtained
-    return ht
- 
-# Function to get the count of nodes
-# in complete binary tree
-def TotalNodes(root):
-   
-  # Base case
-    if(root == None):
-        return 0
-       
-     # Find the left height and the
-    # right heights
-    lh = left_height(root)
-    rh = right_height(root)
-     
-     # If left and right heights are
-    # equal return 2^height(1<<height) -1
-    if(lh == rh):
-        return (1 << lh) - 1
-       
-     # Otherwise, recursive call
-    return 1 + TotalNodes(root.gauche) + TotalNodes(root.droit)
 '''
 a = cons_abr([False, True, True, False, False, True, False, False])
 luka(a)
-compression_bdd(a)
+
+a  = compression_bdd(a, None)
+print2D(a)
+print(len(tabn))
+print(tab)
 dot(a)
-print2D(a)
-print(TotalNodes(a))
-'''
 
 
 
-print2D(a)
+######fin des tests###########
 
-'''
-def experimentation(nbVariable):
-    resultDic = {}
-    tailleTable = pow(2,nbVariable)
-    maxValeur = pow(2,tailleTable)-1
-    for value in range(0,maxValeur):
-        tree = cons_abr(echauffement.table(value, tailleTable))
-        tree_robdd = robdd(tree) #transformer l'arbre en ROBDD
-        nbNoeud = size(tree_robdd)
-        if resultDic.has_key(nbNoeud):
-            resultDic[nbNoeud] = resultDic[nbNoeud]+1
-        else:
-            resultDic[nbNoeud] = 1
-    return resultDic '''
-
-
-
-
-##### Exprimentale #####
-
-#dicRes = experimentation(1)
-
-#sorted (dicRes)
-
-#plt.plot([1,2,3,4], [1,4,9,16],'b-o')
-# 指定 x 轴显示区域为 0-6，y 轴为 0-20
-#plt.axis([0,3.2,0,2.4])
-#plt.show()
-
-def size(tree):
-    if not tree:
-        return 0
-    return 1 + size(tree.get_gauche()) + size(tree.get_droit())
-
-def experimentation(nbVariable):
-    resultDic = {}
-    tailleTable = pow(2,nbVariable)
-    maxValeur = pow(2,tailleTable)-1
-    for value in range(0,maxValeur+1):
-        tree = cons_abr(echauffement.table(value, tailleTable))
-        tree_robdd = compression_bdd(tree) #transformer l'arbre en ROBDD
-        nbNoeud = dot(tree_robdd)
-        if nbNoeud in resultDic:#resultDic.has_key(nbNoeud):
-            resultDic[nbNoeud] = resultDic[nbNoeud]+1
-        else:
-            resultDic[nbNoeud] = 1
-    return resultDic
-
-def graphy_test_1(nbVariable):
-    dicRes = experimentation(nbVariable)
-    sorted(dicRes)
-    print(dicRes)
-    all_keys = dicRes.keys()
-    all_values = dicRes.values()
-
-    plt.plot(all_keys, all_values, 'b-o')
-    # 指定 x 轴显示区域为 0-6，y 轴为 0-20
-    plt.axis([0, 3.2, 0, 2.4])
-    plt.show()
-
-def graphy_test_2(nbVariable):
-    dicRes = experimentation(nbVariable)
-    sorted(dicRes)
-    all_keys = dicRes.keys()
-    all_values = dicRes.values()
-
-    plt.plot(all_keys, all_values, 'b-o')
-
-    plt.axis([0, 6, 0, 10])
-    plt.show()
-
-
-
-graphy_test_1(1)
-graphy_test_2(2)

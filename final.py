@@ -280,18 +280,33 @@ def printluka2D(root):
     printluka2DUtil(root, 0)
 
 
+
 ######partie pour tester###########
-abd = cons_abr([False, True, True, False, False, True, False, False])
-#abd.display()
+#abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
+
+# arbre_luka = luka(abd)
 #print2D(abd)
-#print("\n\n\n\n\n")
-arbre_luka = luka(abd)
-#arbre_luka.display()
-#print2D(arbre_luka)
+#luka(abd)
 
-compression(abd)
+'''
+a = cons_abr([False, False])
+luka(a)
+a = compression_bdd(a, None)
+print2D(a)
+
+
+a = cons_abr([False, True, True, False, False, True, False, False])
+luka(a)
+
+a  = compression_bdd(a, None)
+print2D(a)
+print(len(tabn))
+print(tab)
+dot(a)
+
+'''
+
 ######fin des tests###########
-
 
 ##### Exprimentale #####
 
