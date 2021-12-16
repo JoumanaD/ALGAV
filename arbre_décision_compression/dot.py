@@ -3,6 +3,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from arbre_décision_compression import echauffement
+from arbre_décision_compression.echauffement import table
 
 COUNT = [50]
 
@@ -240,10 +241,13 @@ def graphy_test_2(nbVariable):
 
 
 ######partie pour tester###########
-abd = cons_abr([False, True, True, False, False, True, False, False])
-abd.display()
-# arbre_luka = luka(abd)
+abd = cons_abr(table(38,8))
 dot(abd)
+#abd.display()
+#arbre_luka = luka(abd)
+#dot(arbre_luka)
+
+
 
 # arbre_luka.display()
 # print2D(arbre_luka)

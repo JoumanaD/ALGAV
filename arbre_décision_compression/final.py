@@ -1,12 +1,54 @@
 import math
 import random
-
+from graphviz import Digraph
 from matplotlib import pyplot as plt
 
 from arbre_décision_compression import echauffement
-from arbre_décision_compression.echauffement import table
+
+
+
+def decomposition(num):
+    listBi = []
+    bi = format(num, "b")
+    bi = str(bi)
+    for i in bi:
+        if i == "1":
+            listBi.append(True)
+        else:
+            listBi.append(False)
+    listBi.reverse()
+    print(listBi)
+    return listBi
+
+
+decomposition(5895)
+
+
+def completion(liste, size):
+    if size < len(liste):
+        print(liste[0:size])
+        return liste[0:size]
+    else:
+        for i in range(len(liste), size):
+            liste.append(False)
+        # print(liste)
+        return liste
+
+
+# completion([False, True, True, False, False, True],4)
+# completion([False, True, True, False, False, True],8)
+
+def table(x, n):
+    liste1 = decomposition(x)
+    liste2 = completion(liste1, n)
+    print(liste2)
+    return liste2
+
+
+table(38, 8)
 
 COUNT = [50]
+ID = [1]
 
 
 class ArbreBinaire:
@@ -80,14 +122,11 @@ def luka(Noeud):
         Noeud.lukaval = str(Noeud.valeur) + "(" + str(Noeud.gauche.get_luka()) + ")" + "(" + str(
             Noeud.droit.get_luka()) + ")"
         # print(str(Noeud.valeur)+"("+str(Noeud.gauche.get_valeur())+")"+"("+str(Noeud.droit.get_valeur())+")")
-    else:
+    else :
         Noeud.lukaval = Noeud.valeur
     return Noeud
 
-
 ###### fin fonction Lukasiewicz ###########
-
-###### debut fonction compression #########
 
 tab = []
 tabn = []
@@ -141,18 +180,17 @@ def compression(Noeud):
     return Noeud
 
 
-####### fin fonction compression #########
-
 def compression_bdd(Noeud):
     if Noeud == None:
         return
 
     if Noeud.gauche != None:
         compression_bdd(Noeud.gauche)
-    if Noeud.droit != None :
+    if Noeud.droit != None:
         compression_bdd(Noeud.droit)
 
-    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval) and Noeud.droit != None and Noeud.gauche != None:
+    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab,
+                                                               Noeud.lukaval) and Noeud.gauche != None and Noeud.droit != None:
         if Noeud.gauche.gauche != None and Noeud.gauche.gauche == Noeud.gauche.droit:
             Noeud.gauche = Noeud.gauche.gauche
         elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit:
@@ -170,22 +208,25 @@ def compression_bdd(Noeud):
             tab.append([Noeud.lukaval, len(tab)])
             tabn.append([Noeud, len(tabn)])
 
+    return Noeud
+
+
+
 
 ##### Question 2.9 #######
 listN = []
 
 
 def listNoeud(Noeud):
-    if Noeud.get_gauche() != None:
-        if [Noeud, Noeud.gauche, Noeud.droit] not in listN:
-            listN.append([Noeud, Noeud.gauche, Noeud.droit])
-            listNoeud(Noeud.get_gauche())
-            listNoeud(Noeud.get_droit())
+    if Noeud.get_gauche() != None and [Noeud, Noeud.gauche, Noeud.droit] not in listN:
+        listN.append([Noeud, Noeud.gauche, Noeud.droit])
+        listNoeud(Noeud.get_gauche())
+        listNoeud(Noeud.get_droit())
 
 
 def dot(Noeud):
     listNoeud(Noeud)
-    f = open('/Users/yvo/Desktop/final.txt', "a")
+    f = open('/Users/yvo/Desktop/final.dot', "a")
     f.write("digraph test {\n")
 
     for node in listN:
@@ -197,62 +238,25 @@ def dot(Noeud):
     f.write("}")
 
     f.close()
-    return len(listN)+2
-# Question 4.15
+    return len(listN) + 2
 
-def size(tree):
-    if not tree:
-        return 0
-    return 1 + size(tree.get_gauche()) + size(tree.get_droit())
+def dot_py(Noeud):
+    listNoeud(Noeud)
+    print(listN)
+    dot = Digraph(name="Tree", comment="Tree graph", format="png")
+    for node in listN:
+        dot.node(name=str(node[0].get_id()), label=str(node[0].valeur))
+        dot.node(name=str(node[1].get_id()), label=str(node[1].valeur))
+        dot.node(name=str(node[2].get_id()), label=str(node[2].valeur))
+        dot.edge(str(node[0].get_id()), str(node[1].get_id()),_attributes={'style':'dotted'})
+        dot.edge(str(node[0].get_id()), str(node[2].get_id()))
+    print(dot.source)
+    dot.view(filename="graph_test", directory="/Users/yvo/Desktop")
+    dot.render(filename='graph_test', directory="/Users/yvo/Desktop", view=True)
 
-def experimentation(nbVariable):
-    resultDic = {}
-    tailleTable = pow(2,nbVariable)
-    maxValeur = pow(2,tailleTable)-1
-    for value in range(0,maxValeur+1):
-        tree = cons_abr(echauffement.table(value, tailleTable))
-        tree_robdd = compression_bdd(tree) #transformer l'arbre en ROBDD
-        nbNoeud = dot(tree_robdd)
-        if nbNoeud in resultDic:#resultDic.has_key(nbNoeud):
-            resultDic[nbNoeud] = resultDic[nbNoeud]+1
-        else:
-            resultDic[nbNoeud] = 1
-    return resultDic
-
-def graphy_test_1(nbVariable):
-    dicRes = experimentation(nbVariable)
-    sorted(dicRes)
-    print(dicRes)
-    all_keys = dicRes.keys()
-    all_values = dicRes.values()
-
-    plt.plot(all_keys, all_values, 'b-o')
-    # 指定 x 轴显示区域为 0-6，y 轴为 0-20
-    plt.axis([0, 3.2, 0, 2.4])
-    plt.show()
-
-def graphy_test_2(nbVariable):
-    dicRes = experimentation(nbVariable)
-    sorted(dicRes)
-    all_keys = dicRes.keys()
-    all_values = dicRes.values()
-
-    plt.plot(all_keys, all_values, 'b-o')
-
-    plt.axis([0, 6, 0, 10])
-    plt.show()
-
-
-def graphy_test_3(nbVariable):
-    dicRes = experimentation(nbVariable)
-    sorted(dicRes)
-    all_keys = dicRes.keys()
-    all_values = dicRes.values()
-
-    plt.plot(all_keys, all_values, 'b-o')
-
-    plt.axis([0, 10, 0, 100])
-    plt.show()
+arbre = cons_abr(table(38,8))
+dot_py(arbre)
+####### fin Question 2.9 #########
 
 def print2DUtil(root, space):
     # Base case
@@ -313,48 +317,86 @@ def printluka2D(root):
 
 
 ######partie pour tester###########
-#abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
+# abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
 
 # arbre_luka = luka(abd)
 # print2D(abd)
-#luka(abd)
+# luka(abd)
+
 '''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-printluka2D(abd)
-'''
-#compression_bdd(abd)
-'''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-'''
-###### test dot ######
-abd = cons_abr(table(38,8))
-#dot(abd)
-#luka(abd)
-#dot(abd)
-compression(abd)
-dot(abd)
-#compression_bdd(abd)
-#dot(abd)
+a = cons_abr([False, False])
+luka(a)
+a = compression_bdd(a, None)
+print2D(a)
 
 
-graphy_test_1(1)
-#graphy_test_2(2)
-#graphy_test_3(3)
-###test sizw###
+a = cons_abr([False, True, True, False, False, True, False, False])
+luka(a)
+
+a  = compression_bdd(a, None)
+print2D(a)
+print(len(tabn))
+print(tab)
+dot(a)
+
+'''
+
+#abd = cons_abr(table(38,8))
+#dot(abd)
+#luka(abd)
+#compression(abd)
+#dot(abd)
+#compression_bdd(abd)
+#dot(abd)
 
 
 ######fin des tests###########
 
+##### Exprimentale #####
+def size(tree):
+    if not tree:
+        return 0
+    return 1 + size(tree.get_gauche()) + size(tree.get_droit())
 
+def experimentation(nbVariable):
+    resultDic = {}
+    tailleTable = pow(2, nbVariable)
+    maxValeur = pow(2, tailleTable) - 1
+    for value in range(0, maxValeur + 1):
+        tree = cons_abr(table(value, tailleTable))
+        tree_robdd = compression_bdd(tree)  # transformer l'arbre en ROBDD
+        nbNoeud = dot(tree_robdd)
+        if nbNoeud in resultDic:  # resultDic.has_key(nbNoeud):
+            resultDic[nbNoeud] = resultDic[nbNoeud] + 1
+        else:
+            resultDic[nbNoeud] = 1
+    return resultDic
+
+
+def graphy_test_1(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    print(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
+
+    plt.plot(all_keys, all_values, 'b-o')
+    plt.axis([0, 10, 0, 10])
+    plt.show()
+
+
+def graphy_test_2(nbVariable):
+    dicRes = experimentation(nbVariable)
+    sorted(dicRes)
+    print(dicRes)
+    all_keys = dicRes.keys()
+    all_values = dicRes.values()
+
+    plt.plot(all_keys, all_values, 'b-o')
+
+    plt.axis([0, 20, 0, 20])
+    plt.show()
+
+
+#graphy_test_1(1)
+#graphy_test_2(2)

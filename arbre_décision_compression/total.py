@@ -143,40 +143,48 @@ def compression(Noeud):
 
 ####### fin fonction compression #########
 
-def compression_bdd(Noeud):
+def compression_bdd(Noeud, arbre):
     if Noeud == None:
         return
 
     if Noeud.gauche != None:
-        compression_bdd(Noeud.gauche)
-    if Noeud.droit != None :
-        compression_bdd(Noeud.droit)
+        compression_bdd(Noeud.gauche, arbre)
+    if Noeud.droit != None:
+        compression_bdd(Noeud.droit, arbre)
 
-    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval) and Noeud.droit != None and Noeud.gauche != None:
+    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab,
+                                                               Noeud.lukaval) and Noeud.gauche != None and Noeud.droit != None:
         if Noeud.gauche.gauche != None and Noeud.gauche.gauche == Noeud.gauche.droit:
-            Noeud.gauche = Noeud.gauche.gauche
+            arbre.gauche = Noeud.gauche.gauche
         elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit:
-            Noeud.droit = Noeud.droit.droit
+            arbre.droit = Noeud.droit.droit
 
         ng = rech_val(tab, Noeud.gauche.lukaval)
         nd = rech_val(tab, Noeud.droit.lukaval)
-        tab.append([Noeud.lukaval, ng, nd, len(tab)])
-        tabn.append([Noeud, len(tabn)])
-        Noeud.gauche = rech_noeud(tabn, ng)
-        Noeud.droit = rech_noeud(tabn, nd)
+        if ng != nd:
+            tab.append([Noeud.lukaval, ng, nd, len(tab)])
+            tabn.append([Noeud, len(tabn)])
+            Noeud.gauche = rech_noeud(tabn, ng)
+            Noeud.droit = rech_noeud(tabn, nd)
+            return Noeud
+        else:
+            arbre = Noeud.gauche
+            del Noeud
+            return arbre
+
 
     else:
         if not exist_struc(tab, Noeud.valeur):
             tab.append([Noeud.lukaval, len(tab)])
             tabn.append([Noeud, len(tabn)])
 
-
+    return Noeud
 ##### Question 2.9 #######
 listN = []
 
 
 def listNoeud(Noeud):
-    if Noeud.get_gauche() != None:
+    if Noeud != None:
         if [Noeud, Noeud.gauche, Noeud.droit] not in listN:
             listN.append([Noeud, Noeud.gauche, Noeud.droit])
             listNoeud(Noeud.get_gauche())
@@ -197,7 +205,7 @@ def dot(Noeud):
     f.write("}")
 
     f.close()
-    return len(listN)+2
+
 # Question 4.15
 
 def size(tree):
@@ -211,8 +219,9 @@ def experimentation(nbVariable):
     maxValeur = pow(2,tailleTable)-1
     for value in range(0,maxValeur+1):
         tree = cons_abr(echauffement.table(value, tailleTable))
-        tree_robdd = compression_bdd(tree) #transformer l'arbre en ROBDD
-        nbNoeud = dot(tree_robdd)
+        tree_robdd = compression_bdd(tree,None) #transformer l'arbre en ROBDD
+        print2D(tree_robdd)
+        nbNoeud = size(tree_robdd)
         if nbNoeud in resultDic:#resultDic.has_key(nbNoeud):
             resultDic[nbNoeud] = resultDic[nbNoeud]+1
         else:
@@ -246,6 +255,7 @@ def graphy_test_2(nbVariable):
 def graphy_test_3(nbVariable):
     dicRes = experimentation(nbVariable)
     sorted(dicRes)
+    print(dicRes)
     all_keys = dicRes.keys()
     all_values = dicRes.values()
 
@@ -340,21 +350,19 @@ print2D(abd)
 '''
 ###### test dot ######
 abd = cons_abr(table(38,8))
-#dot(abd)
+dot(abd)
 #luka(abd)
 #dot(abd)
-compression(abd)
-dot(abd)
+#compression(abd)
+#dot(abd)
 #compression_bdd(abd)
 #dot(abd)
 
 
-graphy_test_1(1)
+#graphy_test_1(1)
 #graphy_test_2(2)
 #graphy_test_3(3)
 ###test sizw###
 
 
 ######fin des tests###########
-
-
