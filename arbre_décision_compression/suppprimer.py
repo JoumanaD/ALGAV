@@ -1,8 +1,14 @@
 import math
 import random
+import time
+
 from graphviz import Digraph
 from matplotlib import pyplot as plt
-import time
+
+##################################    Partie I  Echauffement     ###################################
+
+
+'''Question 1.2'''
 
 
 def decomposition(num):
@@ -15,35 +21,53 @@ def decomposition(num):
         else:
             listBi.append(False)
     listBi.reverse()
-    #print(listBi)
     return listBi
 
+# print(decomposition(38))
 
-#decomposition(5895)
+
+'''[False, True, True, False, False, True]'''
+
+
+'''Question 1.3'''
 
 
 def completion(liste, size):
     if size < len(liste):
-        #print(liste[0:size])
         return liste[0:size]
     else:
         for i in range(len(liste), size):
             liste.append(False)
-        # print(liste)
         return liste
 
 
-# completion([False, True, True, False, False, True],4)
-# completion([False, True, True, False, False, True],8)
+# print(completion([False, True, True, False, False, True],4))
+'''[False, True, True, False]'''
+# print(completion([False, True, True, False, False, True],8))
+'''[False, True, True, False, False, True, False, False]'''
+
+'''Question 1.4'''
+
 
 def table(x, n):
     liste1 = decomposition(x)
     liste2 = completion(liste1, n)
-    #print(liste2)
     return liste2
 
+# print(table(38, 8))
 
-#table(38, 8)
+
+'''[False, True, True, False, False, True, False, False]'''
+
+
+##################################         Fin  Partie I         ###################################
+
+
+###############################    Partie II  Arbre de décision et compression     ###########################
+
+
+'''Question 2.5'''
+
 
 COUNT = [50]
 ID = [1]
@@ -91,8 +115,9 @@ class ArbreBinaire:
 
 #######fin de la classe########
 
+'''Question 2.6'''
 
-######début de la construction de l'arbre binaire###########
+
 def cons_abr(liste):
     taille = len(liste)
     if taille == 1:
@@ -101,11 +126,9 @@ def cons_abr(liste):
     return ArbreBinaire("x" + str(int(math.log2(taille))), cons_abr(liste[:mid]), cons_abr(liste[mid:]))
 
 
-######fin de la construction de l'arbre binaire###########
+'''Question 2.7'''
 
 
-###### le mot de Lukasiewicz ###########
-# on utilise un parcours postfixe pour créer l'arbre luka
 def luka(Noeud):
     if Noeud == None:
         return
@@ -124,33 +147,9 @@ def luka(Noeud):
         Noeud.lukaval = Noeud.valeur
     return Noeud
 
-###### fin fonction Lukasiewicz ###########
 
-tab = []
-tabn = []
+'''Question 2.8'''
 
-
-def rech_val(tab, val):
-    for i in range(len(tab)):
-        if not isinstance(val, bool):
-            if tab[i][0] == val:
-                return tab[i][3]
-        else:
-            if tab[i][0] == val:
-                return tab[i][1]
-
-
-def exist_struc(tab, struc):
-    for i in range(len(tab)):
-        if tab[i][0] == struc:
-            return True
-    return False
-
-
-def rech_noeud(tab, val):
-    for i in range(len(tab)):
-        if tab[i][1] == val:
-            return tab[i][0]
 
 def compression(dicMap,Noeud):
     tree = dicMap.get(Noeud.get_luka())
@@ -165,145 +164,8 @@ def compression(dicMap,Noeud):
         return tree
 
 
+'''Question 2.9'''
 
-
-''' old version'''
-'''
-def compression(Noeud):
-    if Noeud == None:
-        return
-
-    if Noeud.gauche != None:
-        compression(Noeud.gauche)
-    if Noeud.droit != None:
-        compression(Noeud.droit)
-
-    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval):
-        ng = rech_val(tab, Noeud.gauche.lukaval)
-        nd = rech_val(tab, Noeud.droit.lukaval)
-        tab.append([Noeud.lukaval, ng, nd, len(tab)])
-        tabn.append([Noeud, len(tabn)])
-        Noeud.gauche = rech_noeud(tabn, ng)
-        Noeud.droit = rech_noeud(tabn, nd)
-
-    else:
-        if not exist_struc(tab, Noeud.valeur):
-            tab.append([Noeud.lukaval, len(tab)])
-            tabn.append([Noeud, len(tabn)])
-
-    return Noeud
-'''
-
-def compression_bdd(Noeud):
-
-    if isinstance(Noeud.lukaval,bool):
-        return Noeud
-    else:
-        Noeud.gauche = compression_bdd(Noeud.gauche)
-        Noeud.droit = compression_bdd(Noeud.droit)
-
-        if(Noeud.gauche.get_id()==Noeud.droit.get_id()):
-            return Noeud.get_droit()
-
-        return Noeud
-
-
-
-'''
-
-la plus proche
-
-    if Noeud == None:
-        return
-
-    if Noeud.gauche.gauche != None:
-        if not isinstance(Noeud.gauche.gauche.lukaval, bool):
-            compression_bdd(Noeud.gauche)
-        if not isinstance(Noeud.droit.gauche.lukaval, bool):
-            compression_bdd(Noeud.droit)
-
-    if isinstance(Noeud.gauche.lukaval, bool):
-        if Noeud.gauche.get_luka() == Noeud.droit.get_luka():
-            #print(Noeud.lukaval)
-            #print(Noeud.gauche.get_luka())
-            #print(Noeud.droit.get_luka())
-            Noeud=Noeud.gauche
-            #print(Noeud.lukaval)
-    else:
-        if (Noeud.gauche.get_luka() == Noeud.droit.get_luka()) and Noeud.gauche.gauche.get_luka()==Noeud.gauche.droit.get_luka():
-            Noeud = Noeud.gauche.gauche
-        elif (Noeud.gauche.get_luka() == Noeud.droit.get_luka()) and Noeud.gauche.gauche.get_luka()!=Noeud.gauche.droit.get_luka():
-            Noeud = Noeud.gauche
-        else:
-            if Noeud.gauche.gauche.get_luka() == Noeud.gauche.droit.get_luka():
-                #print(Noeud.gauche.gauche.get_luka())
-                #print(Noeud.gauche.droit.get_luka())
-                Noeud.gauche = Noeud.gauche.gauche
-                compression_bdd(Noeud)
-            if Noeud.droit.gauche.get_luka() == Noeud.droit.droit.get_luka():
-                #print(Noeud.droit.gauche.get_luka())
-                #print(Noeud.droit.droit.get_luka())
-                Noeud.droit = Noeud.droit.gauche
-
-    return Noeud
-
-
-ancien
-    if not isinstance(Noeud.get_luka(), bool) and not isinstance(Noeud.get_gauche().get_luka(),bool):
-        if Noeud.gauche.gauche.get_luka() == Noeud.gauche.droit.get_luka():
-            print(Noeud.valeur)
-            Noeud.gauche = Noeud.gauche.gauche
-    elif not isinstance(Noeud.lukaval, bool) and not isinstance(Noeud.droit.lukaval,bool):
-        if Noeud.droit.gauche.lukaval == Noeud.droit.droit.lukaval:
-            Noeud.droit = Noeud.droit.gauche
-
-    if not isinstance(Noeud.lukaval, bool) and isinstance(Noeud.gauche.lukaval,bool):
-        if Noeud.gauche.lukaval == Noeud.droit.lukaval:
-            print(Noeud.valeur)
-            return Noeud.gauche
-    elif not isinstance(Noeud.lukaval, bool) and isinstance(Noeud.droit.lukaval,bool):
-        if Noeud.gauche.lukaval == Noeud.droit.lukaval:
-            print(Noeud.valeur)
-            return Noeud.gauche
-
-    return Noeud
-
-
-
-joumana
-    if Noeud == None:
-        return
-
-    if Noeud.gauche != None:
-        compression_bdd(Noeud.gauche)
-    if Noeud.droit != None:
-        compression_bdd(Noeud.droit)
-
-    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab,
-                                                               Noeud.lukaval) and Noeud.gauche != None and Noeud.droit != None:
-        if Noeud.gauche.gauche != None and Noeud.gauche.gauche == Noeud.gauche.droit:
-            Noeud.gauche = Noeud.gauche.gauche
-        elif Noeud.droit.droit != None and Noeud.droit.gauche == Noeud.droit.droit:
-            Noeud.droit = Noeud.droit.droit
-
-        ng = rech_val(tab, Noeud.gauche.lukaval)
-        nd = rech_val(tab, Noeud.droit.lukaval)
-        tab.append([Noeud.lukaval, ng, nd, len(tab)])
-        tabn.append([Noeud, len(tabn)])
-        Noeud.gauche = rech_noeud(tabn, ng)
-        Noeud.droit = rech_noeud(tabn, nd)
-
-    else:
-        if not exist_struc(tab, Noeud.valeur):
-            tab.append([Noeud.lukaval, len(tab)])
-            tabn.append([Noeud, len(tabn)])
-
-    return Noeud
-
-'''
-
-
-##### Question 2.9 #######
 listN = []
 
 
@@ -316,6 +178,7 @@ def listNoeud(Noeud):
         listNoeud(Noeud.get_droit())
 
 
+# Créer un ficher dot
 def dot(Noeud):
     listNoeud(Noeud)
     f = open('/Users/yvo/Desktop/final.dot', "a")
@@ -335,11 +198,12 @@ def dot(Noeud):
     f.write("}")
 
     f.close()
-    #return len(listN) + 2
 
+
+# Afficher le graph directement par python
 def dot_py(Noeud):
     listNoeud(Noeud)
-    print(listN)
+    #print(listN)
     dot = Digraph(name="Tree", comment="Tree graph", format="png")
     if len(listN)>1:
         for node in listN:
@@ -357,115 +221,81 @@ def dot_py(Noeud):
     dot.view(filename="graph_test", directory="/Users/yvo/Desktop")
     dot.render(filename='graph_test', directory="/Users/yvo/Desktop", view=True)
 
-#arbre = cons_abr(table(38,8))
-#dot_py(arbre)
-####### fin Question 2.9 #########
 
-def print2DUtil(root, space):
-    # Base case
-    if (root == None):
-        return
-
-    # Increase distance between levels
-    space += COUNT[0]
-
-    # Process right child first
-    print2DUtil(root.droit, space)
-
-    # Print current node after space
-    # count
-    print()
-    for i in range(COUNT[0], space):
-        print(end=" ")
-    print(root.get_id() + ": " + str(root.valeur))
-
-    # Process left child
-    print2DUtil(root.gauche, space)
+##################################         Fin  Partie II         ###################################
 
 
-# Wrapper over print2DUtil()
-def print2D(root):
-    # space=[0]
-    # Pass initial space count as 0
-    print2DUtil(root, 0)
+###############################    Partie III  Arbre de d ́ecision et ROBDD     ###########################
+
+'''Question 3.10'''
 
 
-def printluka2DUtil(root, space):
-    # Base case
-    if (root == None):
-        return
+def compression_bdd(Noeud):
 
-    # Increase distance between levels
-    space += COUNT[0]
+    if isinstance(Noeud.lukaval,bool):
+        return Noeud
+    else:
+        Noeud.gauche = compression_bdd(Noeud.gauche)
+        Noeud.droit = compression_bdd(Noeud.droit)
 
-    # Process right child first
-    printluka2DUtil(root.droit, space)
+        if(Noeud.gauche.get_id()==Noeud.droit.get_id()):
+            return Noeud.get_droit()
 
-    # Print current node after space
-    # count
-    print()
-    for i in range(COUNT[0], space):
-        print(end=" ")
-    print(root.get_id() + ": " + str(root.lukaval))
-
-    # Process left child
-    printluka2DUtil(root.gauche, space)
+        return Noeud
 
 
-# Wrapper over print2DUtil()
-def printluka2D(root):
-    # space=[0]
-    # Pass initial space count as 0
-    printluka2DUtil(root, 0)
+##################################         Fin  Partie III         ###################################
 
 
-######partie pour tester###########
-# abd = cons_abr([True, True, False, True, False, True, False, False, True, False, True, False, False, True, True, False])
 
-# arbre_luka = luka(abd)
-# print2D(abd)
-# luka(abd)
+
+
+#################################          Partie TEST               #################################
+
+
+'''TEST1 cons_arb()'''
 
 '''
-a = cons_abr([False, False])
-luka(a)
-a = compression_bdd(a, None)
-print2D(a)
-
-
-a = cons_abr([False, True, True, False, False, True, False, False])
-luka(a)
-
-a  = compression_bdd(a, None)
-print2D(a)
-print(len(tabn))
-print(tab)
-dot(a)
-
+abd = cons_abr(table(38,8))
+dot(abd)
+dot_py(abd)
 '''
 
-#abd = cons_abr(table(38,8))
-#dot(abd)
-#luka(abd)
-#compression(abd)
-#dot(abd)
-#compression_bdd(abd)
-#dot(abd)
-#tree = cons_abr([False,False,False,True])
-#luka(tree)
-#tree = compression({},tree)
-#tree=compression_bdd(tree)
-#print(new_tree.valeur)
-#dot_py(tree)
-#luka(tree)
-#compression(tree)
-#print2D(new_tree)
+'''TEST2 luka()'''
+'''
+abd = cons_abr(table(38,8))
+luka(abd)
+dot(abd)
+dot_py(abd)
+'''
+
+'''TEST3 compression()'''
+'''
+abd = cons_abr(table(38,8))
+luka(abd)
+abd = compression({},abd)
+dot(abd)
+dot_py(abd)
+'''
+
+'''TEST4 compression_bdd()'''
+'''
+abd = cons_abr(table(38,8))
+luka(abd)
+abd = compression({},abd)
+abd = compression_bdd(abd)
+dot(abd)
+dot_py(abd)
+'''
 
 
-######fin des tests###########
+##################################         Fin  Partie TEST         ###################################
 
-##### Exprimentale #####
+#################################          Partie IV  Exprimental        #################################
+
 nbNode=[]
+
+
 def size(tree):
     if tree == None:
         return
@@ -475,40 +305,14 @@ def size(tree):
     size(tree.get_gauche())
     size(tree.get_droit())
 
-'''
-def experimentation(nbVariable):
-    resultDic = {}
-    tailleTable = pow(2, nbVariable)
-    maxValeur = pow(2, tailleTable) - 1
-    for value in range(0, maxValeur + 1):
-        nbNode.clear()
-        tree = cons_abr(table(value, tailleTable))
-        print(table(value, tailleTable))
-        luka(tree)
-        compression(tree)
-        tree = compression_bdd(tree)  # transformer l'arbre en ROBDD
-        size(tree)
-        nbNoeud = len(nbNode)
-        print(nbNoeud)
-        if nbNoeud in resultDic:  # resultDic.has_key(nbNoeud):
-            resultDic[nbNoeud] = resultDic[nbNoeud] + 1
-        else:
-            resultDic[nbNoeud] = 1
-    return resultDic
-    '''
-#size(new_tree)
-#print(len(nbNode))
-
-
-
-
 tableVertie=[]
+
 
 def newTest1():
     resultDic = {}
     for value in range(0, 4):
         tableVertie.append(table(value, 2))
-    for i in range(0, 3):
+    for i in range(0, 4):
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
         luka(tree)
@@ -521,11 +325,13 @@ def newTest1():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
+
 def newTest2():
     resultDic = {}
     for value in range(0, 16):
         tableVertie.append(table(value, 4))
-    for i in range(0, 15):
+    for i in range(0, 16):
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
         luka(tree)
@@ -538,11 +344,13 @@ def newTest2():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
+
 def newTest3():
     resultDic = {}
     for value in range(0, 256):
         tableVertie.append(table(value, 8))
-    for i in range(0, 255):
+    for i in range(0, 256):
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
         luka(tree)
@@ -555,11 +363,13 @@ def newTest3():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
+
 def newTest4():
     resultDic = {}
     for value in range(0, 65536):
         tableVertie.append(table(value, 16))
-    for i in range(0, 65535):
+    for i in range(0, 65536):
         print(i)
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
@@ -573,13 +383,14 @@ def newTest4():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
 
 def newTest5():
     resultDic = {}
     for simple in range(0, 500003):
         randomNum = random.randint(0,pow(2,32)-1)
         tableVertie.append(table(randomNum, 32))
-    for i in range(0, 500002):
+    for i in range(0, 500003):
         print(i)
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
@@ -593,6 +404,7 @@ def newTest5():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
 
 def newTest6():
     resultDic = {}
@@ -613,6 +425,7 @@ def newTest6():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
 
 def newTest7():
     resultDic = {}
@@ -634,12 +447,13 @@ def newTest7():
             resultDic[nbNoeud] = 1
     return resultDic
 
-def newTest6():
+
+def newTest8():
     resultDic = {}
-    for simple in range(0, 400003):
-        randomNum = random.randint(0,pow(2,64)-1)
-        tableVertie.append(table(randomNum, 64))
-    for i in range(0, 400003):
+    for simple in range(0, 56343):
+        randomNum = random.randint(0,pow(2,256)-1)
+        tableVertie.append(table(randomNum, 256))
+    for i in range(0, 56343):
         print(i)
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
@@ -654,12 +468,13 @@ def newTest6():
             resultDic[nbNoeud] = 1
     return resultDic
 
-def newTest6():
+
+def newTest9():
     resultDic = {}
-    for simple in range(0, 400003):
-        randomNum = random.randint(0,pow(2,64)-1)
-        tableVertie.append(table(randomNum, 64))
-    for i in range(0, 400003):
+    for simple in range(0, 94999):
+        randomNum = random.randint(0,pow(2,512)-1)
+        tableVertie.append(table(randomNum, 512))
+    for i in range(0, 94999):
         print(i)
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
@@ -674,12 +489,13 @@ def newTest6():
             resultDic[nbNoeud] = 1
     return resultDic
 
-def newTest6():
+
+def newTest10():
     resultDic = {}
-    for simple in range(0, 400003):
-        randomNum = random.randint(0,pow(2,64)-1)
-        tableVertie.append(table(randomNum, 64))
-    for i in range(0, 400003):
+    for simple in range(0, 17975):
+        randomNum = random.randint(0,pow(2,1024)-1)
+        tableVertie.append(table(randomNum, 1024))
+    for i in range(0, 17975):
         print(i)
         nbNode.clear()
         tree = cons_abr(tableVertie[i])
@@ -693,9 +509,10 @@ def newTest6():
         else:
             resultDic[nbNoeud] = 1
     return resultDic
+
 
 def graphy_test_1():
-    dicRes = newTest2()
+    dicRes = newTest1()
     sorted(dicRes)
     keylist = dicRes.keys()
     newd = {}
@@ -711,6 +528,8 @@ def graphy_test_1():
     plt.grid()
     plt.axis([0, 4, 0, 5])
     plt.show()
+
+
 def graphy_test_2():
     dicRes = newTest2()
     sorted(dicRes)
@@ -728,6 +547,8 @@ def graphy_test_2():
     plt.grid()
     plt.axis([0, 6, 0, 10])
     plt.show()
+
+
 def graphy_test_3():
     dicRes = newTest3()
     sorted(dicRes)
@@ -745,6 +566,7 @@ def graphy_test_3():
     plt.grid()
     plt.axis([0, 10, 0, 100])
     plt.show()
+
 
 def graphy_test_4():
     dicRes = newTest4()
@@ -764,6 +586,7 @@ def graphy_test_4():
     plt.axis([0, 12, 0, 25000])
     plt.show()
 
+
 def graphy_test_5():
     dicRes = newTest5()
     sorted(dicRes)
@@ -782,8 +605,9 @@ def graphy_test_5():
     plt.xlabel("ROBDD node count for 5 variable")
     plt.ylabel("Number of Boolean functions")
     plt.grid()
-    plt.axis([0, 20, 0, 2*pow(10,9)])
+    plt.axis([0, 20, 0, 2*pow(10, 9)])
     plt.show()
+
 
 def graphy_test_6():
     dicRes = newTest6()
@@ -797,7 +621,7 @@ def graphy_test_6():
     print("unique size:"+str(len(nbKey)))
     all_keys = list(newd.keys())
     all_values = list(newd.values())
-    all_values_new = [i * 4611 * pow(10,10) for i in all_values]
+    all_values_new = [i * (pow(2, 64) / 400003) for i in all_values]
 
     plt.plot(all_keys, all_values_new, 'b-o')
     plt.xlabel("ROBDD node count for 6 variable")
@@ -806,30 +630,112 @@ def graphy_test_6():
     plt.axis([0, 35, 0, 5*pow(10,18)])
     plt.show()
 
-'''
-tree = cons_abr([False, False])
-luka(tree)
-compression(tree)
-tree = compression_bdd(tree)
-size(tree)
-print(len(nbNode))
-dot_py(tree)
-'''
+
+def graphy_test_7():
+    dicRes = newTest7()
+    sorted(dicRes)
+    keylist = dicRes.keys()
+    newd = {}
+    for key in sorted(keylist):
+        newd[key] = dicRes[key]
+    print(newd)
+    nbKey = list(newd.keys())
+    print("unique size:"+str(len(nbKey)))
+    all_keys = list(newd.keys())
+    all_values = list(newd.values())
+    all_values_new = [i * 6.988 for i in all_values]
+
+    plt.plot(all_keys, all_values_new, 'b-o')
+    plt.xlabel("ROBDD node count for 7 variable")
+    plt.ylabel("Number of Boolean functions(10^32)")
+    plt.grid()
+    plt.axis([0, 50, 0, 9*pow(10, 5)])
+    plt.show()
 
 
-#graphy_test(1)
-#graphy_test(2)
-#graphy_test(3)
-#graphy_test(4)
-#graphy_test_4(4)
+def graphy_test_8():
+    dicRes = newTest8()
+    sorted(dicRes)
+    keylist = dicRes.keys()
+    newd = {}
+    for key in sorted(keylist):
+        newd[key] = dicRes[key]
+    print(newd)
+    nbKey = list(newd.keys())
+    print("unique size:"+str(len(nbKey)))
+    all_keys = list(newd.keys())
+    all_values = list(newd.values())
+    all_values_new = [i * 2.055  for i in all_values]
 
-#graphy_test_1()
-#graphy_test_2()
-#graphy_test_3()
-#graphy_test_4()
-#graphy_test_5()
+    plt.plot(all_keys, all_values_new, 'b-o')
+    plt.xlabel("ROBDD node count for 8 variable")
+    plt.ylabel("Number of Boolean functions(*10^72)")
+    plt.grid()
+    plt.axis([0, 90, 0, 3*pow(10,4)])
+    plt.show()
+
+
+def graphy_test_9():
+    dicRes = newTest9()
+    sorted(dicRes)
+    keylist = dicRes.keys()
+    newd = {}
+    for key in sorted(keylist):
+        newd[key] = dicRes[key]
+    print(newd)
+    nbKey = list(newd.keys())
+    print("unique size:"+str(len(nbKey)))
+    all_keys = list(newd.keys())
+    all_values = list(newd.values())
+    all_values_new = [i * 1.411363 for i in all_values]
+
+    plt.plot(all_keys, all_values_new, 'b-o')
+    plt.xlabel("ROBDD node count for 9 variable")
+    plt.ylabel("Number of Boolean functions(*10^149)")
+    plt.grid()
+    plt.axis([0, 160, 0, 2.5*pow(10,4)])
+    plt.show()
+
+
+def graphy_test_10():
+    dicRes = newTest10()
+    sorted(dicRes)
+    keylist = dicRes.keys()
+    newd = {}
+    for key in sorted(keylist):
+        newd[key] = dicRes[key]
+    print(newd)
+    nbKey = list(newd.keys())
+    print("unique size:"+str(len(nbKey)))
+    all_keys = list(newd.keys())
+    all_values = list(newd.values())
+    all_values_new = [i * 1.000107 for i in all_values]
+
+    plt.plot(all_keys, all_values_new, 'b-o')
+    plt.xlabel("ROBDD node count for 10 variable")
+    plt.ylabel("Number of Boolean functions(*10^304")
+    plt.grid()
+    plt.axis([0, 300, 0, 2*pow(10, 3)])
+    plt.show()
+
+##################################         Fin  Partie IV  Exprimental    ##############################
+
+#################################          Partie  Exprimental  TEST     #################################
 
 start =time.perf_counter()
-graphy_test_6()
+
+# graphy_test_1()
+# graphy_test_2()
+# graphy_test_3()
+# graphy_test_4()
+# graphy_test_5()
+# graphy_test_6()
+# graphy_test_7()
+# graphy_test_8()
+# graphy_test_9()
+# graphy_test_10()
+
 end = time.perf_counter()
+
 print('Running time: %s Seconds'%(end-start))
+
