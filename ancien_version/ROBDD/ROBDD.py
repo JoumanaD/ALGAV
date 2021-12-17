@@ -104,29 +104,31 @@ def rech_noeud(tab, val):
       if tab[i][1] == val :
          return tab[i][0]
 
-def compression(Noeud):
+def compression(Noeud, ab):
    if Noeud==None:
       return
 
    if Noeud.gauche!=None :
-      compression(Noeud.gauche) 
+      compression(Noeud.gauche, ab) 
    if  Noeud.droit!=None:
-      compression(Noeud.droit)
+      compression(Noeud.droit, ab)
 
    if not isinstance(Noeud.lukaval, bool) and not exist_struc(tab, Noeud.lukaval): 
       ng = rech_val(tab,Noeud.gauche.lukaval)
       nd = rech_val(tab,Noeud.droit.lukaval)
       tab.append([Noeud.lukaval, ng, nd, len(tab)])
       tabn.append([Noeud, len(tabn)])
-      Noeud.gauche = rech_noeud(tabn, ng)
-      Noeud.droit = rech_noeud(tabn, nd)
+      ab.gauche = rech_noeud(tabn, ng)
+      ab.droit = rech_noeud(tabn, nd)
       
    else :
-      if not exist_struc(tab, Noeud.valeur):
-         tab.append([Noeud.lukaval, len(tab)])
-         tabn.append([Noeud, len(tabn)])
+        if not exist_struc(tab, Noeud.valeur):
+            tab.append([Noeud.lukaval, len(tab)])
+            tabn.append([Noeud, len(tabn)])
+        else:
+            del Noeud
  
-   return Noeud 
+   return ab 
 ####### fin fonction compression #########
 
 def compression_bdd(Noeud):
@@ -158,26 +160,32 @@ def compression_bdd(Noeud):
             
     return Noeud
 ##### Question 2.9 #######
-listN = []
 
-def listNoeud(Noeud):
-    if Noeud.get_gauche() != None and [Noeud, Noeud.gauche, Noeud.droit] not in listN:
-            listN.append([Noeud, Noeud.gauche, Noeud.droit])
-            listNoeud(Noeud.get_gauche())
-            listNoeud(Noeud.get_droit())
+def listNoeud(Noeud, listN):
+    if Noeud==None:
+        return
+
+    if not isinstance(Noeud.valeur, bool):
+        listN.append(Noeud) 
+    if Noeud.gauche!=None:
+        listNoeud(Noeud.gauche, listN) 
+      
+    if Noeud.droit!=None:
+        listNoeud(Noeud.droit, listN)
 
 
 def dot(Noeud):
-    listNoeud(Noeud)
+    listN = []
+    listNoeud(Noeud, listN)
     f = open('D:\M1-STL\ALGAV\ROBDD\dot_bdd.dot', "a")
     f.write("digraph test {\n")
 
     for node in listN:
-        f.write(node[0].get_id() + "   [ label=\" " + node[0].valeur + " \"];\n")
-        f.write(node[1].get_id() + "   [ label=\" " + str(node[1].valeur) + " \"];\n")
-        f.write(node[2].get_id() + "   [ label=\" " + str(node[2].valeur) + " \"];\n")
-        f.write(node[0].get_id() + " -> " + str(node[1].get_id()) + "   [ style=dashed  ];\n")
-        f.write(node[0].get_id() + " -> " + str(node[2].get_id()) + "   [ style=solid  ];\n")
+        f.write(node.get_id() + "   [ label=\" " + str(node.valeur) + " \"];\n")
+        f.write(node.get_gauche().get_id() + "   [ label=\" " + str(node.get_gauche().valeur) + " \"];\n")
+        f.write(node.get_droit().get_id() + "   [ label=\" " + str(node.get_droit().valeur) + " \"];\n")
+        f.write(node.get_id() + " -> " + str(node.get_gauche().get_id()) + "   [ style=dashed  ];\n")
+        f.write(node.get_id() + " -> " + str(node.get_droit().get_id()) + "   [ style=solid  ];\n")
     f.write("}")
 
     f.close()
@@ -244,30 +252,28 @@ def printluka2D(root):
 
 
 ######partie pour tester###########
-abd = cons_abr([False, True, True, False, False, True, False, False])
 
+abd = cons_abr([False, True, True, False, False, True, False, False])
+#dot(abd)
 # arbre_luka = luka(abd)
 #print2D(abd)
-luka(abd)
-'''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-printluka2D(abd)
-'''
-compression_bdd(abd)
-'''
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print("-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print2D(abd)
-'''
-dot(abd)
+#luka(abd)
+#compression_bdd(abd)
+
 ######fin des tests###########
+
+def compression_bdd(arbrecomp):
+    if isinstance(arbrecomp.valeur, bool):
+        return arbrecomp
+    else:
+        if isinstance(arbrecomp.get_droit().get_valeur(), bool) and arbrecomp.get_gauche().get_valeur()==arbrecomp.get_droit().get_valeur():
+            return arbrecomp.get_gauche()
+        arbrecomp.insert_gauche(compression_bdd(arbrecomp.get_gauche()))
+        arbrecomp.insert_droit(compression_bdd(arbrecomp.get_droit()))
+        return arbrecomp
+
+abd = cons_abr([False, True, True, False, False, True, False, False])
+luka(abd)
+b = compression(abd, None)
+print2D(b)
+dot(b)

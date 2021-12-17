@@ -151,6 +151,7 @@ abd = cons_abr([False, True, True, False, False, True, False, False])
 #print2D(abd)
 #print("\n\n\n\n\n")
 arbre_luka = luka(abd)
+print2D(abd)
 #arbre_luka.display()
 #print2D(arbre_luka)
 
