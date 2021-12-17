@@ -183,12 +183,12 @@ dot_py(abd)
 '''
 
 ####TEST3 compression()####
-
+'''
 abd = cons_abr(table(38,8))
 luka(abd)
 abd = compression({},abd)
 dot(abd)
 dot_py(abd)
-
+'''
 
 

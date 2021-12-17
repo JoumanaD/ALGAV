@@ -22,10 +22,12 @@ def compression_bdd(Noeud):
 ##################################         Fin  Partie III         ###################################
 
 ####TEST4 compression_bdd()####
-
+'''
 abd = cons_abr(table(38,8))
 luka(abd)
 abd = compression({},abd)
 abd = compression_bdd(abd)
 dot(abd)
 dot_py(abd)
+'''
+
