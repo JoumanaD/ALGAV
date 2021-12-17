@@ -291,7 +291,7 @@ dot_py(abd)
 
 ##################################         Fin  Partie TEST         ###################################
 
-#################################          Partie IV  Exprimental        #################################
+#################################          Partie IV  Expérimental        #################################
 
 nbNode=[]
 
@@ -300,8 +300,8 @@ def size(tree):
     if tree == None:
         return
 
-    if tree.id not in nbNode:
-        nbNode.append(tree.id)
+    if tree.lukaval not in nbNode:
+        nbNode.append(tree.lukaval)
     size(tree.get_gauche())
     size(tree.get_droit())
 
@@ -718,7 +718,7 @@ def graphy_test_10():
     plt.axis([0, 300, 0, 2*pow(10, 3)])
     plt.show()
 
-##################################         Fin  Partie IV  Exprimental    ##############################
+##################################         Fin  Partie IV  Expérimental    ##############################
 
 #################################          Partie  Exprimental  TEST     #################################
 
