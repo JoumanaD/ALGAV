@@ -11,6 +11,9 @@ Pour tester :
 -  **arbre_ROBDD.py** : décommenter de la ligne 25 à 32 pour tester la fonction compression_bdd
 -  **exprimentale.py** : décommenter à partir de la ligne 440 pour tester.
 
+La totalité du projet ce trouve dans le fichier **projet_Algav.py**
+NB : avant de passer à un autre ficher il faut les parties en commentaires soient en commentaires. 
+
 Projet par : 
 ELDAKAR Joumana /
 ZHANG Zimeng 
