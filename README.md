@@ -1,12 +1,16 @@
 # ALGAV
 
-pour tester le fichier :
-    **echauffement.py** : décommenter la ligne 61 
-    **arbre_decision_comp.py** : décommenter les lignes de 170 à 174 pour tester la fonction **cons_arb**
-    **arbre_ROBDD.py** : Executez le fichier pour tester la fonction compression_bdd
-    **projet_Algav.py** : fichier qui contient toutes les parties des codes avec la partie exprimentale qui commence par la ligne 292 pour tester cetter partie, il faut enlever les commentaires quie se trouve à partie de la ligne 721. 
+Pour tester :
 
+
+- **echauffement.py** : décommenter la ligne 61
+-  **arbre_decision_comp.py** : 
+    - pour tester la fonction **cons_arb** : décommenter de la ligne 170 à 174
+    - pour tester la fonction **luka** : décommenter de la ligne 178 à 183
+    - pour tester la fonction **luka** : décommenter de la ligne 186 à 192
+-  **arbre_ROBDD.py** : décommenter de la ligne 25 à 32 pour tester la fonction compression_bdd
+-  **exprimentale.py** : décommenter à partir de la ligne 440 pour tester.
 
 Projet par : 
-ELDAKAR Joumana 
+ELDAKAR Joumana /
 ZHANG Zimeng 
