@@ -14,6 +14,3 @@ Pour tester :
 La totalité du projet ce trouve dans le fichier **projet_Algav.py**
 NB : avant de passer à un autre ficher il faut les parties en commentaires soient en commentaires. 
 
-Projet par : 
-ELDAKAR Joumana /
-ZHANG Zimeng 
